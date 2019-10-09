@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ListItemCard from './ListItemCard'
+import PropTypes from 'prop-types';
 
 export class ListItemsTable extends Component {
     render() {
@@ -14,7 +15,8 @@ export class ListItemsTable extends Component {
                     this.props.todoList.items.map((todoItem)=>(
                         <ListItemCard 
                             key={todoItem.key}
-                            listItem={todoItem} />
+                            listItem={todoItem}
+                            />
                     ))
                 }
             </div>
