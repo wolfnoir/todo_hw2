@@ -16,12 +16,18 @@ export class ListItemsTable extends Component {
                         <ListItemCard 
                             key={todoItem.key}
                             listItem={todoItem}
-                            />
+                            loadItem = {this.props.loadItem}/>
                     ))
                 }
+                <div className="list_item_add_card"><b>+</b></div>
             </div>
         )
     }
+}
+
+ListItemsTable.propTypes = {
+    loadItem: PropTypes.func.isRequired,
+    listItem: PropTypes.object.isRequired
 }
 
 export default ListItemsTable

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types';
 
 export class ListItemCard extends Component {
     getCompletedStyle = () => {
@@ -25,7 +26,7 @@ export class ListItemCard extends Component {
         }
         
         return (
-            <div className='list_item_card'>
+            <div className='list_item_card' onClick = {this.props.loadItem.bind(this, this.props.listItem)}>
                 <div className='list_item_card_description'>
                     {this.props.listItem.description}
                 </div>
@@ -47,5 +48,11 @@ export class ListItemCard extends Component {
         )
     }
 }
+
+ListItemCard.propTypes = {
+    loadItem: PropTypes.func.isRequired,
+    listItem: PropTypes.object.isRequired
+}
+
 
 export default ListItemCard

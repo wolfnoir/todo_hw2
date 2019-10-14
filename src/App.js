@@ -14,7 +14,8 @@ class App extends Component {
   state = {
     currentScreen: AppScreen.HOME_SCREEN,
     todoLists: testTodoListData.todoLists,
-    currentList: null
+    currentList: null,
+    currentItem: null
   }
 
   goHome = () => {
@@ -25,7 +26,15 @@ class App extends Component {
   loadList = (todoListToLoad) => {
     this.setState({currentScreen: AppScreen.LIST_SCREEN});
     this.setState({currentList: todoListToLoad});
+    this.setState({currentItem: null});
     console.log("currentList: " + this.state.currentList);
+    console.log("currentScreen: " + this.state.currentScreen);
+  }
+
+  loadItem = (itemToLoad) => {
+    this.setState({currentScreen: AppScreen.ITEM_SCREEN});
+    this.setState({currentItem: itemToLoad})
+    console.log("currentItem: " + this.state.currentItem);
     console.log("currentScreen: " + this.state.currentScreen);
   }
 
@@ -38,7 +47,8 @@ class App extends Component {
       case AppScreen.LIST_SCREEN:            
         return <ListScreen
           goHome={this.goHome.bind(this)}
-          todoList={this.state.currentList} />;
+          todoList={this.state.currentList}
+          loadItem = {this.loadItem.bind(this)} />;
       case AppScreen.ITEM_SCREEN:
         return <ItemScreen />;
       default:
