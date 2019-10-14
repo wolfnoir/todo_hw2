@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 export class ListItemCard extends Component {
-    getStyle = () => {
+    getCompletedStyle = () => {
         return{
             color: this.props.listItem.completed ?
             '#669966' : '#FF0000'
@@ -11,12 +11,19 @@ export class ListItemCard extends Component {
     render() {
         const isCompleted = this.props.listItem.completed;
         let statusText;
+        const indexNum = this.props.listItem.key;
+        let upButtonClass = 'list_item_card_button';
+        let downButtonClass = 'list_item_card_button';
         if (isCompleted){
             statusText = "Completed";
         }
         else{
             statusText = "Pending";
         }
+        if(indexNum == 0){
+            upButtonClass = 'list_item_card_button disabled';
+        }
+        
         return (
             <div className='list_item_card'>
                 <div className='list_item_card_description'>
@@ -28,8 +35,13 @@ export class ListItemCard extends Component {
                 <div className='list_item_card_due_date'>
                     {this.props.listItem.due_date}
                 </div>
-                <div className='list_item_card_completed' style={this.getStyle()}>
+                <div className='list_item_card_completed' style={this.getCompletedStyle()}>
                     {statusText}
+                </div>
+                <div className='list_item_card_toolbar'>
+                    <button className={upButtonClass}>&#8679;</button>
+                    <button className={downButtonClass}>&#8681;</button>
+                    <button className='list_item_card_button'>&#10006;</button>
                 </div>
             </div>
         )
