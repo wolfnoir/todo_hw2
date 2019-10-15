@@ -26,8 +26,7 @@ export class ListItemsTable extends Component {
 }
 
 ListItemsTable.propTypes = {
-    loadItem: PropTypes.func.isRequired,
-    listItem: PropTypes.object.isRequired
+    loadItem: PropTypes.func.isRequired
 }
 
 export default ListItemsTable

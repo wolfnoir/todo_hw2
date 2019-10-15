@@ -152,8 +152,11 @@ body {
 }
 
 /* ITEM SCREEN CONTROLS */
-#item_heading {}
-#item_form_container {}
+#item_heading {
+}
+#item_form_container {
+  background-color: var(--swatch-primary);
+}
 #item_description_prompt {}
 #item_description_textfield {}
 #item_assigned_to_prompt {}

@@ -45,7 +45,7 @@ export class ListScreen extends Component {
                             value={this.getListName()} 
                             type="text" 
                             id="list_name_textfield"
-                            onKeyUp={event => this.setName(event.target.value)} />
+                            onChange={event => this.setName(event.target.value)} />
                     </div>
                     <div id="list_details_owner_container" className="text_toolbar">
                         <span id="list_owner_prompt">Owner:</span>
@@ -53,7 +53,7 @@ export class ListScreen extends Component {
                             value={this.getListOwner()}
                             type="text" 
                             id="list_owner_textfield"
-                            onKeyUp={event => this.setOwner(event.target.value)} />
+                            onChange={event => this.setOwner(event.target.value)} />
                     </div>
                 </div>
                 <ListItemsTable todoList={this.props.todoList}
@@ -64,8 +64,7 @@ export class ListScreen extends Component {
 }
 
 ListScreen.propTypes = {
-    loadItem: PropTypes.func.isRequired,
-    listItem: PropTypes.object.isRequired
+    loadItem: PropTypes.func.isRequired
 }
 
 export default ListScreen

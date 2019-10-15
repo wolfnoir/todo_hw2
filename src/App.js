@@ -33,7 +33,8 @@ class App extends Component {
 
   loadItem = (itemToLoad) => {
     this.setState({currentScreen: AppScreen.ITEM_SCREEN});
-    this.setState({currentItem: itemToLoad})
+    this.setState({currentItem: itemToLoad});
+    console.log("currentList: " + this.state.currentList);
     console.log("currentItem: " + this.state.currentItem);
     console.log("currentScreen: " + this.state.currentScreen);
   }
@@ -50,7 +51,8 @@ class App extends Component {
           todoList={this.state.currentList}
           loadItem = {this.loadItem.bind(this)} />;
       case AppScreen.ITEM_SCREEN:
-        return <ItemScreen />;
+        return <ItemScreen
+        loadList={this.loadList.bind(this)}/>;
       default:
         return <div>ERROR</div>;
     }

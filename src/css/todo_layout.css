@@ -120,9 +120,14 @@ body {
 }
 
 /* ITEM SCREEN CONTROLS */
-#item_heading {}
+#item_heading {
+    font-size: 24px;
+    font-style: bold;
+    margin-bottom: 5px;
+}
 #item_form_container {
   display: grid;
+  padding: 10px;
 }
 #item_description_prompt {}
 #item_description_textfield {}
@@ -132,8 +137,14 @@ body {
 #item_due_date_picker {}
 #item_completed_prompt {}
 #item_completed_checkbox {}
-#item_form_submit_button {}
-#item_form_cancel_button {}
+#item_form_submit_button {
+    font-size: 24px;
+    border-radius: 5px;
+}
+#item_form_cancel_button {
+    font-size: 24px;
+    border-radius: 5px;
+}
 
 /* ITEM SCREEN CLASSES */
 .item_prompt {
