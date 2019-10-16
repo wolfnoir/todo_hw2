@@ -21,7 +21,7 @@ export class ListItemCard extends Component {
         else{
             statusText = "Pending";
         }
-        if(indexNum === 0){
+        if(indexNum === 0){ //edit this???
             upButtonClass = 'list_item_card_button disabled';
         }
         

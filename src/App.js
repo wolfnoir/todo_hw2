@@ -52,7 +52,10 @@ class App extends Component {
           loadItem = {this.loadItem.bind(this)} />;
       case AppScreen.ITEM_SCREEN:
         return <ItemScreen
-        loadList={this.loadList.bind(this)}/>;
+        todoList={this.state.currentList}
+        listItem = {this.state.currentItem}
+        loadList = {this.loadList.bind(this)}
+        />;
       default:
         return <div>ERROR</div>;
     }

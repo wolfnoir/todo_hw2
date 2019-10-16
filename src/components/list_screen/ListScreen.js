@@ -6,8 +6,16 @@ import PropTypes from 'prop-types';
 
 export class ListScreen extends Component {
     state = {
-        name: '',
-        owner: ''
+        listName: this.getListName(),
+        listOwner: this.getListOwner()
+    }
+
+    onChange = (e) => {
+        this.setState({ [e.target.name]: e.target.value});
+        if(e.target.name === "listName")
+            this.props.todoList.name = e.target.value;
+        else
+            this.props.todoList.owner = e.target.value;
     }
 
     getListName() {
@@ -25,14 +33,6 @@ export class ListScreen extends Component {
         }
     }
 
-    setName(newName){
-        this.setState({name: newName});
-    }
-
-    setOwner(newOwner){
-        this.setState({owner: newOwner});
-    }
-
     render() {
         return (
             <div id="todo_list">
@@ -42,18 +42,20 @@ export class ListScreen extends Component {
                     <div id="list_details_name_container" className="text_toolbar">
                         <span id="list_name_prompt">Name:</span>
                         <input 
-                            value={this.getListName()} 
+                            value={this.state.listName} 
+                            name="listName"
                             type="text" 
                             id="list_name_textfield"
-                            onChange={event => this.setName(event.target.value)} />
+                            onChange={this.onChange} />
                     </div>
                     <div id="list_details_owner_container" className="text_toolbar">
                         <span id="list_owner_prompt">Owner:</span>
                         <input 
-                            value={this.getListOwner()}
+                            value={this.state.listOwner}
                             type="text" 
+                            name="listOwner"
                             id="list_owner_textfield"
-                            onChange={event => this.setOwner(event.target.value)} />
+                            onChange={this.onChange} />
                     </div>
                 </div>
                 <ListItemsTable todoList={this.props.todoList}

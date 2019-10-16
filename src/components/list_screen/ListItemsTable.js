@@ -19,7 +19,9 @@ export class ListItemsTable extends Component {
                             loadItem = {this.props.loadItem}/>
                     ))
                 }
-                <div className="list_item_add_card"><b>+</b></div>
+                <div className="list_item_add_card"
+                    onClick = {this.props.loadItem.bind(this, null)}
+                    ><b>+</b></div>
             </div>
         )
     }
