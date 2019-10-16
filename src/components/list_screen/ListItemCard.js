@@ -13,6 +13,7 @@ export class ListItemCard extends Component {
         const isCompleted = this.props.listItem.completed;
         let statusText;
         const indexNum = this.props.listItem.key;
+        const {listLength} = this.props;
         let upButtonClass = 'list_item_card_button';
         let downButtonClass = 'list_item_card_button';
         if (isCompleted){
@@ -23,6 +24,9 @@ export class ListItemCard extends Component {
         }
         if(indexNum === 0){ //edit this???
             upButtonClass = 'list_item_card_button disabled';
+        }
+        else if(indexNum === listLength - 1){
+            downButtonClass = 'list_item_card_button disabled';
         }
         
         return (
@@ -40,9 +44,12 @@ export class ListItemCard extends Component {
                     {statusText}
                 </div>
                 <div className='list_item_card_toolbar'>
-                    <button className={upButtonClass}>&#8679;</button>
-                    <button className={downButtonClass}>&#8681;</button>
-                    <button className='list_item_card_button'>&#10006;</button>
+                    <button className={upButtonClass}
+                        onClick={this.props.moveItemUp.bind(this, indexNum)}>&#8679;</button>
+                    <button className={downButtonClass}
+                        onClick={this.props.moveItemDown.bind(this, indexNum)}>&#8681;</button>
+                    <button className='list_item_card_button'
+                        onClick={this.props.removeItem.bind(this, indexNum)}>&#10006;</button>
                 </div>
             </div>
         )
@@ -51,7 +58,8 @@ export class ListItemCard extends Component {
 
 ListItemCard.propTypes = {
     loadItem: PropTypes.func.isRequired,
-    listItem: PropTypes.object.isRequired
+    listItem: PropTypes.object.isRequired,
+    toDoList: PropTypes.object.isRequired
 }
 
 

@@ -16,7 +16,12 @@ export class ListItemsTable extends Component {
                         <ListItemCard 
                             key={todoItem.key}
                             listItem={todoItem}
-                            loadItem = {this.props.loadItem}/>
+                            toDoList={this.props.toDoList}
+                            loadItem = {this.props.loadItem}
+                            listLength = {this.props.listLength}
+                            removeItem = {this.props.removeItem}
+                            moveItemUp = {this.props.moveItemUp}
+                            moveItemDown = {this.props.moveItemDown}/>
                     ))
                 }
                 <div className="list_item_add_card"

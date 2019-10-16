@@ -33,11 +33,16 @@ export class ListScreen extends Component {
         }
     }
 
+    delList(){
+
+    }
+
     render() {
         return (
             <div id="todo_list">
                 <ListHeading goHome={this.props.goHome} />
-                <ListTrash />
+                <ListTrash 
+                    delList = {this.delList.bind(this)}/>
                 <div id="list_details_container">
                     <div id="list_details_name_container" className="text_toolbar">
                         <span id="list_name_prompt">Name:</span>
@@ -59,7 +64,12 @@ export class ListScreen extends Component {
                     </div>
                 </div>
                 <ListItemsTable todoList={this.props.todoList}
-                loadItem = {this.props.loadItem}/>
+                    listState={this.state.todoList}
+                    loadItem = {this.props.loadItem}
+                    listLength = {this.props.listLength}
+                    removeItem = {this.props.removeItem}
+                    moveItemUp = {this.props.moveItemUp}
+                    moveItemDown = {this.props.moveItemDown}/>
             </div>
         )
     }
