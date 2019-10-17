@@ -213,6 +213,16 @@ font-size: 16pt;
   cursor: default;
 }
 
+.modal_content{
+  border-radius: 5px;
+  position: relative;
+  background-color: #E1E4CB;
+  margin: auto;
+  padding: 15px;
+  width: 30%;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
 /*CUSTOM VARIABLES HERE*/
 
 .modal_dialog > * {

@@ -33,8 +33,14 @@ export class ListScreen extends Component {
         }
     }
 
-    delList(){
+    delList = () =>{
+        let dialog = document.getElementById("modal_yes_no_dialog");
+        dialog.classList.add("is_visible");
+    }
 
+    cancelDelList = () => {
+        let dialog = document.getElementById("modal_yes_no_dialog");
+        dialog.classList.remove("is_visible");
     }
 
     render() {
@@ -69,7 +75,31 @@ export class ListScreen extends Component {
                     listLength = {this.props.listLength}
                     removeItem = {this.props.removeItem}
                     moveItemUp = {this.props.moveItemUp}
-                    moveItemDown = {this.props.moveItemDown}/>
+                    moveItemDown = {this.props.moveItemDown}
+                    sortByTask = {this.props.sortByTask}
+                    sortByDueDate = {this.props.sortByDueDate}
+                    sortByStatus = {this.props.sortByStatus}/>
+
+                <div id="modal_yes_no_dialog" className="modal" hidden>
+                    <div className="modal_content">
+                        <div className="modal_header">
+                          Delete List?
+                        </div>
+                        <div className="modal_body">
+                          <p><b>Are you sure you want to delete this list?</b></p>
+                          <button id="modal_yes_button"
+                          className="modal_button"
+                          onClick = {this.props.confirmDelList.bind(this)}>
+                              Yes</button>
+                          <button id="modal_no_button" className="modal_button" onClick ={this.cancelDelList.bind(this)}>No</button>
+                          <br/>
+                          <br/>
+                        </div>
+                        <div className="modal_footer">
+                          The list will not be retrievable.
+                        </div>
+                      </div>
+                </div>
             </div>
         )
     }

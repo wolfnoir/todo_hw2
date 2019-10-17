@@ -24,7 +24,8 @@ class App extends Component {
     currentScreen: AppScreen.HOME_SCREEN,
     todoLists: testTodoListData.todoLists,
     currentList: null,
-    currentItem: null
+    currentItem: null,
+    currentSort: "sort_by_task_increasing"
   }
 
   goHome = () => {
@@ -111,6 +112,95 @@ class App extends Component {
     this.loadList(this.state.currentList);
   }
 
+  sortByTask = () => {
+    if(this.state.currentSort === ItemSortCriteria.SORT_BY_TASK_INCREASING){
+        this.setState({currentSort: ItemSortCriteria.SORT_BY_TASK_DECREASING});
+    }
+    else{
+      this.setState({currentSort: ItemSortCriteria.SORT_BY_TASK_INCREASING});
+    }
+    this.sortTasks(this);
+  }
+
+  sortByDueDate = () => {
+    if(this.state.currentSort === ItemSortCriteria.SORT_BY_DUE_DATE_INCREASING){
+      this.setState({currentSort: ItemSortCriteria.SORT_BY_DUE_DATE_DECREASING});
+    }
+    else{
+      this.setState({currentSort: ItemSortCriteria.SORT_BY_DUE_DATE_INCREASING});
+    }
+    this.sortTasks(this);
+  }
+
+  sortByStatus = () => {
+    if(this.state.currentSort === ItemSortCriteria.SORT_BY_STATUS_INCREASING){
+      this.setState({currentSort: ItemSortCriteria.SORT_BY_STATUS_DECREASING});
+    }
+    else{
+      this.setState({currentSort: ItemSortCriteria.SORT_BY_STATUS_INCREASING});
+    }
+    this.sortTasks(this);
+  }
+
+  sortTasks = () => {
+    this.state.currentList.items.sort(this.compare.bind(this));
+    for(let i = 0; i < this.state.currentList.items.length; i++){
+      this.state.currentList.items[i].key = i;
+    }
+    this.loadList(this.state.currentList);
+  }
+
+  compare = (item1, item2) => {
+    // IF IT'S A DECREASING CRITERIA SWAP THE ITEMS
+    if (this.state.currentSort === ItemSortCriteria.SORT_BY_TASK_DECREASING
+        || this.state.currentSort === ItemSortCriteria.SORT_BY_STATUS_DECREASING
+        || this.state.currentSort === ItemSortCriteria.SORT_BY_DUE_DATE_DECREASING) {
+        let temp = item1;
+        item1 = item2;
+        item2 = temp;
+    }
+    // SORT BY ITEM DESCRIPTION
+    if (this.state.currentSort === ItemSortCriteria.SORT_BY_TASK_INCREASING
+        || this.state.currentSort === ItemSortCriteria.SORT_BY_TASK_DECREASING) {
+        if (item1.description < item2.description)
+            return -1;
+        else if (item1.description > item2.description)
+            return 1;
+        else
+            return 0;
+    }
+
+    // SORT BY DUE DATE
+    if (this.state.currentSort === ItemSortCriteria.SORT_BY_DUE_DATE_INCREASING
+        || this.state.currentSort === ItemSortCriteria.SORT_BY_DUE_DATE_DECREASING) {
+        if (item1.due_date < item2.due_date)
+            return -1;
+        else if (item1.due_date > item2.due_date)
+            return 1;
+        else
+            return 0;
+    }
+
+    // SORT BY COMPLETED
+    else {
+        if (item1.completed && !item2.completed)
+            return -1;
+        else if (!item1.completed && item2.completed)
+            return 1;
+        else
+            return 0;
+    }
+  }
+
+  confirmDelList = () => {
+    let listIndex = this.state.currentList.key;
+    this.state.todoLists.splice(listIndex,1);
+    for(let i = 0; i < this.state.todoLists.length; i++){
+      this.state.todoLists[i].key = i;
+    }
+    this.goHome();
+    console.log(this.state.todoLists);
+  }
 
   render() {
     switch(this.state.currentScreen) {
@@ -127,7 +217,11 @@ class App extends Component {
           listLength={this.state.currentList.items.length}
           removeItem={this.removeItem.bind(this)}
           moveItemUp = {this.moveItemUp.bind(this)}
-          moveItemDown = {this.moveItemDown.bind(this)} />;
+          moveItemDown = {this.moveItemDown.bind(this)}
+          sortByTask = {this.sortByTask.bind(this)}
+          sortByDueDate = {this.sortByDueDate.bind(this)}
+          sortByStatus = {this.sortByStatus.bind(this)}
+          confirmDelList = {this.confirmDelList.bind(this)} />;
       case AppScreen.ITEM_SCREEN:
         return <ItemScreen
           todoList={this.state.currentList}
