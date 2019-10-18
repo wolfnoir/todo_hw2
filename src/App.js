@@ -10,6 +10,7 @@ import ListItemRemove_Transaction from './jstps_transactions/ListItemRemove_Tran
 import ListMoveItemDown_Transaction from './jstps_transactions/ListMoveItemDown_Transaction.js'
 import ListMoveItemUp_Transaction from './jstps_transactions/ListMoveItemUp_Transaction.js'
 import ListItemSubmit_Transaction from './jstps_transactions/ListItemSubmit_Transaction.js'
+import ListSortTasks_Transaction from './jstps_transactions/ListSortTasks_Transaction.js';
 
 const AppScreen = {
   HOME_SCREEN: "HOME_SCREEN",
@@ -34,7 +35,7 @@ class App extends Component {
     todoLists: testTodoListData.todoLists,
     currentList: null,
     currentItem: null,
-    currentSort: "sort_by_task_increasing"
+    currentSort: ItemSortCriteria.SORT_BY_TASK_INCREASING
   }
 
   goHome = () => {
@@ -117,82 +118,37 @@ class App extends Component {
 
   sortByTask = () => {
     if(this.state.currentSort === ItemSortCriteria.SORT_BY_TASK_INCREASING){
-        this.setState({currentSort: ItemSortCriteria.SORT_BY_TASK_DECREASING});
+        this.setState({currentSort: ItemSortCriteria.SORT_BY_TASK_DECREASING}, () => this.sortTasks(this));
     }
     else{
-      this.setState({currentSort: ItemSortCriteria.SORT_BY_TASK_INCREASING});
+      this.setState({currentSort: ItemSortCriteria.SORT_BY_TASK_INCREASING}, () => this.sortTasks(this));
     }
-    this.sortTasks(this);
   }
 
   sortByDueDate = () => {
     if(this.state.currentSort === ItemSortCriteria.SORT_BY_DUE_DATE_INCREASING){
-      this.setState({currentSort: ItemSortCriteria.SORT_BY_DUE_DATE_DECREASING});
+      this.setState({currentSort: ItemSortCriteria.SORT_BY_DUE_DATE_DECREASING}, () => this.sortTasks(this));
     }
     else{
-      this.setState({currentSort: ItemSortCriteria.SORT_BY_DUE_DATE_INCREASING});
+      this.setState({currentSort: ItemSortCriteria.SORT_BY_DUE_DATE_INCREASING}, () => this.sortTasks(this));
     }
-    this.sortTasks(this);
   }
 
   sortByStatus = () => {
     if(this.state.currentSort === ItemSortCriteria.SORT_BY_STATUS_INCREASING){
-      this.setState({currentSort: ItemSortCriteria.SORT_BY_STATUS_DECREASING});
+      this.setState({currentSort: ItemSortCriteria.SORT_BY_STATUS_DECREASING}, () => this.sortTasks(this));
     }
     else{
-      this.setState({currentSort: ItemSortCriteria.SORT_BY_STATUS_INCREASING});
+      this.setState({currentSort: ItemSortCriteria.SORT_BY_STATUS_INCREASING}, () => this.sortTasks(this));
     }
-    this.sortTasks(this);
   }
 
   sortTasks = () => {
-    this.state.currentList.items.sort(this.compare.bind(this));
-    for(let i = 0; i < this.state.currentList.items.length; i++){
-      this.state.currentList.items[i].key = i;
-    }
+    let oldList = this.state.currentList;
+    console.log(oldList);
+    let transaction = new ListSortTasks_Transaction(this.state.currentList, oldList, this.state.currentSort);
+    tps.addTransaction(transaction);
     this.loadList(this.state.currentList);
-  }
-
-  compare = (item1, item2) => {
-    // IF IT'S A DECREASING CRITERIA SWAP THE ITEMS
-    if (this.state.currentSort === ItemSortCriteria.SORT_BY_TASK_DECREASING
-        || this.state.currentSort === ItemSortCriteria.SORT_BY_STATUS_DECREASING
-        || this.state.currentSort === ItemSortCriteria.SORT_BY_DUE_DATE_DECREASING) {
-        let temp = item1;
-        item1 = item2;
-        item2 = temp;
-    }
-    // SORT BY ITEM DESCRIPTION
-    if (this.state.currentSort === ItemSortCriteria.SORT_BY_TASK_INCREASING
-        || this.state.currentSort === ItemSortCriteria.SORT_BY_TASK_DECREASING) {
-        if (item1.description < item2.description)
-            return -1;
-        else if (item1.description > item2.description)
-            return 1;
-        else
-            return 0;
-    }
-
-    // SORT BY DUE DATE
-    if (this.state.currentSort === ItemSortCriteria.SORT_BY_DUE_DATE_INCREASING
-        || this.state.currentSort === ItemSortCriteria.SORT_BY_DUE_DATE_DECREASING) {
-        if (item1.due_date < item2.due_date)
-            return -1;
-        else if (item1.due_date > item2.due_date)
-            return 1;
-        else
-            return 0;
-    }
-
-    // SORT BY COMPLETED
-    else {
-        if (item1.completed && !item2.completed)
-            return -1;
-        else if (!item1.completed && item2.completed)
-            return 1;
-        else
-            return 0;
-    }
   }
 
   confirmDelList = () => {
