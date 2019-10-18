@@ -58,8 +58,7 @@ export class ListItemCard extends Component {
 
 ListItemCard.propTypes = {
     loadItem: PropTypes.func.isRequired,
-    listItem: PropTypes.object.isRequired,
-    toDoList: PropTypes.object.isRequired
+    listItem: PropTypes.object.isRequired
 }
 
 

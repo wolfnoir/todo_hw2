@@ -5,18 +5,6 @@ import ListTrash from './ListTrash'
 import PropTypes from 'prop-types';
 
 export class ListScreen extends Component {
-    state = {
-        listName: this.getListName(),
-        listOwner: this.getListOwner()
-    }
-
-    onChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value});
-        if(e.target.name === "listName")
-            this.props.todoList.name = e.target.value;
-        else
-            this.props.todoList.owner = e.target.value;
-    }
 
     getListName() {
         if (this.props.todoList) {
@@ -43,9 +31,33 @@ export class ListScreen extends Component {
         dialog.classList.remove("is_visible");
     }
 
+    updateListName = () =>{
+        this.props.updateListName(document.getElementById("list_name_textfield").value);
+    }
+
+    updateListOwner = () => {
+        this.props.updateListOwner(document.getElementById("list_owner_textfield").value);
+    }
+
+    onKeyPressed = (e) =>{
+        this.props.keyPressed(e);
+    }
+
+    componentWillMount() {
+        let todoListDiv = document.getElementById('todo_list');
+        document.addEventListener("keydown", this.onKeyPressed.bind(this));
+    }
+  
+    componentWillUnmount() {
+        let todoListDiv = document.getElementById('todo_list');
+        document.removeEventListener("keydown", this.onKeyPressed.bind(this));
+    }  
+
     render() {
         return (
-            <div id="todo_list">
+            <div id="todo_list"
+                tabIndex="0"
+                onKeyDown = {this.onKeyPressed}>
                 <ListHeading goHome={this.props.goHome} />
                 <ListTrash 
                     delList = {this.delList.bind(this)}/>
@@ -53,24 +65,23 @@ export class ListScreen extends Component {
                     <div id="list_details_name_container" className="text_toolbar">
                         <span id="list_name_prompt">Name:</span>
                         <input 
-                            value={this.state.listName} 
+                            defaultValue={this.getListName()} 
                             name="listName"
                             type="text" 
                             id="list_name_textfield"
-                            onChange={this.onChange} />
+                            onChange={this.updateListName} />
                     </div>
                     <div id="list_details_owner_container" className="text_toolbar">
                         <span id="list_owner_prompt">Owner:</span>
                         <input 
-                            value={this.state.listOwner}
+                            defaultValue={this.getListOwner()}
                             type="text" 
                             name="listOwner"
                             id="list_owner_textfield"
-                            onChange={this.onChange} />
+                            onChange={this.updateListOwner} />
                     </div>
                 </div>
                 <ListItemsTable todoList={this.props.todoList}
-                    listState={this.state.todoList}
                     loadItem = {this.props.loadItem}
                     listLength = {this.props.listLength}
                     removeItem = {this.props.removeItem}

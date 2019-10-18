@@ -92,7 +92,7 @@ class jsTPS{
      */
     peekUndo() {
         if (this.hasTransactionToUndo()) {
-            return this.transactions[mostRecentTransaction];
+            return this.transactions[this.mostRecentTransaction];
         }
         else
             return null;
@@ -107,7 +107,7 @@ class jsTPS{
      */    
     peekDo() {
         if (this.hasTransactionToRedo()) {
-            return this.transactions[mostRecentTransaction+1];
+            return this.transactions[this.mostRecentTransaction+1];
         }
         else
             return null;

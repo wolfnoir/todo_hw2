@@ -3,6 +3,9 @@ import testTodoListData from './TestTodoListData.json'
 import HomeScreen from './components/home_screen/HomeScreen'
 import ItemScreen from './components/item_screen/ItemScreen'
 import ListScreen from './components/list_screen/ListScreen'
+import jsTPS from './jstps/jsTPS.js';
+import ListNameChange_Transaction from './jstps_transactions/ListNameChange_Transaction.js';
+import ListOwnerChange_Transaction from './jstps_transactions/ListOwnerChange_Transaction.js';
 
 const AppScreen = {
   HOME_SCREEN: "HOME_SCREEN",
@@ -19,6 +22,8 @@ const ItemSortCriteria = {
   SORT_BY_STATUS_DECREASING: "sort_by_status_decreasing"
 }
 
+let tps = new jsTPS();
+
 class App extends Component {
   state = {
     currentScreen: AppScreen.HOME_SCREEN,
@@ -29,6 +34,7 @@ class App extends Component {
   }
 
   goHome = () => {
+    tps.clearAllTransactions();
     this.setState({currentScreen: AppScreen.HOME_SCREEN});
     this.setState({currentList: null});
   }
@@ -202,6 +208,36 @@ class App extends Component {
     console.log(this.state.todoLists);
   }
 
+  keyPressed = (e) => {
+    if((e.which === 90 || e.keyCode === 90) && e.ctrlKey){
+      //undo
+      console.log("ctrl + z");
+      tps.undoTransaction();
+    }
+    else if ((e.which === 89 || e.keyCode === 89) && e.ctrlKey){
+      //redo
+      console.log("ctrl + y");
+      if(tps.peekDo() === null){
+        return;
+      }
+      else{
+        tps.doTransaction();
+      }
+    }
+  }
+
+  updateListName = (newName) =>{
+    let transaction = new ListNameChange_Transaction(this.state.currentList, newName);
+    tps.addTransaction(transaction);
+    console.log(transaction);
+  }
+
+  updateListOwner = (newOwner) =>{
+    let transaction = new ListOwnerChange_Transaction(this.state.currentList, newOwner);
+    tps.addTransaction(transaction);
+    console.log(transaction);
+  }
+
   render() {
     switch(this.state.currentScreen) {
       case AppScreen.HOME_SCREEN:
@@ -221,7 +257,10 @@ class App extends Component {
           sortByTask = {this.sortByTask.bind(this)}
           sortByDueDate = {this.sortByDueDate.bind(this)}
           sortByStatus = {this.sortByStatus.bind(this)}
-          confirmDelList = {this.confirmDelList.bind(this)} />;
+          confirmDelList = {this.confirmDelList.bind(this)}
+          updateListName = {this.updateListName.bind(this)}
+          updateListOwner = {this.updateListOwner.bind(this)}
+          keyPressed = {this.keyPressed.bind(this)} />;
       case AppScreen.ITEM_SCREEN:
         return <ItemScreen
           todoList={this.state.currentList}
