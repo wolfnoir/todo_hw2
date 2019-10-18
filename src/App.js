@@ -6,6 +6,10 @@ import ListScreen from './components/list_screen/ListScreen'
 import jsTPS from './jstps/jsTPS.js';
 import ListNameChange_Transaction from './jstps_transactions/ListNameChange_Transaction.js';
 import ListOwnerChange_Transaction from './jstps_transactions/ListOwnerChange_Transaction.js';
+import ListItemRemove_Transaction from './jstps_transactions/ListItemRemove_Transaction.js';
+import ListMoveItemDown_Transaction from './jstps_transactions/ListMoveItemDown_Transaction.js'
+import ListMoveItemUp_Transaction from './jstps_transactions/ListMoveItemUp_Transaction.js'
+import ListItemSubmit_Transaction from './jstps_transactions/ListItemSubmit_Transaction.js'
 
 const AppScreen = {
   HOME_SCREEN: "HOME_SCREEN",
@@ -65,37 +69,38 @@ class App extends Component {
     this.loadList(newList);
   }
 
+  updateListName = (newName) =>{
+    let transaction = new ListNameChange_Transaction(this.state.currentList, newName);
+    tps.addTransaction(transaction);
+    console.log(transaction);
+  }
+
+  updateListOwner = (newOwner) =>{
+    let transaction = new ListOwnerChange_Transaction(this.state.currentList, newOwner);
+    tps.addTransaction(transaction);
+    console.log(transaction);
+  }
+
   removeItem = (itemIndex, event) => {
     event.stopPropagation();
-    this.state.currentList.items.splice(itemIndex,1);
-    for(let i = 0; i < this.state.currentList.items.length; i++){
-      this.state.currentList.items[i].key = i;
-    }
+    let transaction = new ListItemRemove_Transaction(this.state.currentList, itemIndex);
+    console.log(transaction)
+    tps.addTransaction(transaction);
     this.loadList(this.state.currentList);
   }
 
   moveItemUp = (itemIndex, event) => {
     event.stopPropagation();
-    if(itemIndex !== 0){
-        let tempItem = this.state.currentList.items[itemIndex];
-        tempItem.key = itemIndex - 1;
-        this.state.currentList.items[itemIndex - 1].key = itemIndex;
-        this.state.currentList.items[itemIndex] = this.state.currentList.items[itemIndex - 1]; //switch w the one above it
-        this.state.currentList.items[itemIndex - 1] = tempItem;
-        this.loadList(this.state.currentList);
-    }
+    let transaction = new ListMoveItemUp_Transaction(this.state.currentList, itemIndex);
+    tps.addTransaction(transaction);
+    this.loadList(this.state.currentList);
   }
 
   moveItemDown = (itemIndex, event) => {
     event.stopPropagation();
-    if(itemIndex !== this.state.currentList.items.length - 1){
-        let tempItem = this.state.currentList.items[itemIndex];
-        tempItem.key = itemIndex + 1;
-        this.state.currentList.items[itemIndex + 1].key = itemIndex;
-        this.state.currentList.items[itemIndex] = this.state.currentList.items[itemIndex + 1]; //switch w the one below it
-        this.state.currentList.items[itemIndex + 1] = tempItem;
-        this.loadList(this.state.currentList);
-    }
+    let transaction = new ListMoveItemDown_Transaction(this.state.currentList, itemIndex);
+    tps.addTransaction(transaction);
+    this.loadList(this.state.currentList);
   }
 
   handleSubmitItem = (currentItem, event) => {
@@ -105,16 +110,8 @@ class App extends Component {
     newItem.assigned_to = document.getElementById('item_assigned_to_textfield').value;
     newItem.due_date = document.getElementById('item_due_date_picker').value;
     newItem.completed = document.getElementById('item_completed_checkbox').checked;
-    if(currentItem){ //if its true then we're editing
-      let currentIndex = currentItem.key;
-      newItem.key = currentIndex;
-      this.state.currentList.items[currentIndex] = newItem;
-    }
-    else{
-      let currentIndex = this.state.currentList.items.length;
-      newItem.key = currentIndex;
-      this.state.currentList.items[currentIndex] = newItem;
-    }
+    let transaction = new ListItemSubmit_Transaction(this.state.currentList, currentItem, newItem);
+    tps.addTransaction(transaction);
     this.loadList(this.state.currentList);
   }
 
@@ -205,37 +202,26 @@ class App extends Component {
       this.state.todoLists[i].key = i;
     }
     this.goHome();
-    console.log(this.state.todoLists);
   }
 
   keyPressed = (e) => {
-    if((e.which === 90 || e.keyCode === 90) && e.ctrlKey){
-      //undo
-      console.log("ctrl + z");
-      tps.undoTransaction();
-    }
-    else if ((e.which === 89 || e.keyCode === 89) && e.ctrlKey){
-      //redo
-      console.log("ctrl + y");
-      if(tps.peekDo() === null){
-        return;
+    if(this.state.currentScreen === "LIST_SCREEN"){
+      if((e.which === 90 || e.keyCode === 90) && e.ctrlKey){
+        //undo
+        tps.undoTransaction();
+        this.loadList(this.state.currentList);
       }
-      else{
-        tps.doTransaction();
+      else if ((e.which === 89 || e.keyCode === 89) && e.ctrlKey){
+        //redo
+        if(tps.peekDo() === null){
+          return;
+        }
+        else{
+          tps.doTransaction();
+          this.loadList(this.state.currentList);
+        }
       }
     }
-  }
-
-  updateListName = (newName) =>{
-    let transaction = new ListNameChange_Transaction(this.state.currentList, newName);
-    tps.addTransaction(transaction);
-    console.log(transaction);
-  }
-
-  updateListOwner = (newOwner) =>{
-    let transaction = new ListOwnerChange_Transaction(this.state.currentList, newOwner);
-    tps.addTransaction(transaction);
-    console.log(transaction);
   }
 
   render() {
