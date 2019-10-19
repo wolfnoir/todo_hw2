@@ -144,7 +144,7 @@ class App extends Component {
   }
 
   sortTasks = () => {
-    let oldList = this.state.currentList;
+    let oldList  = JSON.parse(JSON.stringify(this.state.currentList));
     console.log(oldList);
     let transaction = new ListSortTasks_Transaction(this.state.currentList, oldList, this.state.currentSort);
     tps.addTransaction(transaction);

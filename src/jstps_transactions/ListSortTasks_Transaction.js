@@ -21,12 +21,12 @@ class ListSortTasks_Transaction{
         for(let i = 0; i < this.todoList.items.length; i++){
             this.todoList.items[i].key = i;
         }
-        console.log(this.listItems);
         console.log(this.todoList);
     }
 
     undoTransaction(){
-        this.todoList = this.oldList;
+        this.todoList.items = this.oldList.items;
+        console.log(this.todoList);
     }
 
     compare = (item1, item2) => {
